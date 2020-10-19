@@ -100,7 +100,7 @@ disqusShortname = ""
     [[params.tiles.showcase]]
       title = "Omega Group plc- Pay Discrimination"
       subtitle = "Gender Inequality?"
-      image = "pic02.jpg"
+      giimage = "pic02.jpg"
       url = "blogs/project2"
       
     [[params.tiles.showcase]]
@@ -110,10 +110,10 @@ disqusShortname = ""
       url = "blogs/project4"
 
     [[params.tiles.showcase]]
-      title = "Ipsum"
-      subtitle = "Nisl Sed Aliquam"
+      title = "Climate change and temperature anomalies"
+      #subtitle = "Nisl Sed Aliquam"
       image = "pic04.jpg"
-      url = "blogs/ipsum"
+      url = "blogs/project3"
 
     [[params.tiles.showcase]]
       title = "Consequat"
@@ -121,11 +121,7 @@ disqusShortname = ""
       image = "pic05.jpg"
       url = "blogs/ipsum"
 
-    [[params.tiles.showcase]]
-      title = "Etiam"
-      subtitle = "Feugiat Amet Tempus"
-      image = "pic06.jpg"
-      url = "blogs/ipsum"
+
     # You can make more showcases by copy and pasting the code above
 
   [params.blog]

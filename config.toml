@@ -116,10 +116,10 @@ disqusShortname = ""
       url = "blogs/project3"
 
     [[params.tiles.showcase]]
-      title = "Consequat"
-      subtitle = "Ipsum Dolor Sit Amet"
+      title = " Trump's Approval Margins"
+      #subtitle = "Ipsum Dolor Sit Amet"
       image = "pic05.jpg"
-      url = "blogs/ipsum"
+      url = "blogs/project5"
 
 
     # You can make more showcases by copy and pasting the code above

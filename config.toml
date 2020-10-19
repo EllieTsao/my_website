@@ -98,27 +98,24 @@ disqusShortname = ""
       url = "blogs/project1"
 
     [[params.tiles.showcase]]
-      title = "Omega Group plc- Pay Discrimination"
-      subtitle = "Gender Inequality?"
+      title = "Excess rentals in TfL bike sharing"
+      #subtitle = "Gender Inequality?"
       giimage = "pic02.jpg"
-      url = "blogs/project2"
+      url = "blogs/project6"
       
     [[params.tiles.showcase]]
       title = "IMDB ratings: Differences between directors"
       #subtitle = "Lorem Etiam Nullam"
-      image = "pic03.jpg"
       url = "blogs/project4"
 
     [[params.tiles.showcase]]
       title = "Climate change and temperature anomalies"
-      #subtitle = "Nisl Sed Aliquam"
-      image = "pic04.jpg"
       url = "blogs/project3"
 
     [[params.tiles.showcase]]
       title = " Trump's Approval Margins"
       #subtitle = "Ipsum Dolor Sit Amet"
-      image = "pic05.jpg"
+      #image = "pic05.jpg"
       url = "blogs/project5"
 
 

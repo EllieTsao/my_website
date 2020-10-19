@@ -1,0 +1,161 @@
+---
+categories:
+- ""
+- ""
+date: "2017-10-31T21:28:43-05:00"
+description: ""
+draft: false
+keywords: ""
+slug: project6
+title: Excess rentals in TfL bike sharing
+---
+
+
+```{r, setup, include=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE, 
+  warning = FALSE, 
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+options(digits = 3)
+
+# default figure size
+knitr::opts_chunk$set(
+  fig.width=6.75, 
+  fig.height=6.75,
+  fig.align = "center"
+)
+```
+
+
+```{r load-libraries, include=FALSE}
+
+
+library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
+library(mosaic)
+library(ggthemes)
+library(lubridate)
+library(here)
+library(skimr)
+library(janitor)
+library(httr)
+library(readxl)
+library(vroom)
+
+library(infer)
+
+
+```
+
+
+
+
+```{r, get_tfl_data, cache=TRUE}
+url <- "https://data.london.gov.uk/download/number-bicycle-hires/ac29363e-e0cb-47cc-a97a-e216d900a6b0/tfl-daily-cycle-hires.xlsx"
+
+# Download TFL data to temporary file
+httr::GET(url, write_disk(bike.temp <- tempfile(fileext = ".xlsx")))
+
+# Use read_excel to read it as dataframe
+bike0 <- read_excel(bike.temp,
+                   sheet = "Data",
+                   range = cell_cols("A:B"))
+
+# change dates to get year, month, and week
+bike <- bike0 %>% 
+  clean_names() %>% 
+  rename (bikes_hired = number_of_bicycle_hires) %>% 
+  mutate (year = year(day),
+          month = lubridate::month(day, label = TRUE),
+          week = isoweek(day))
+```
+
+
+
+
+
+```{r tfl_month_year_grid, echo=FALSE, out.width="100%"}
+knitr::include_graphics(here::here("images", "tfl_distributions_monthly.png"), error = FALSE)
+```
+
+
+
+>There is not a drastic change in bicycle usage in May and June 2020 compared to 2019. Compared to earlier years however, there is an increase in bicycle usage. 
+
+
+
+```{r tfl_absolute_monthly_change, echo=FALSE, out.width="100%"}
+knitr::include_graphics(here::here("images", "tfl_monthly.png"), error = FALSE)
+```
+
+```{r}
+temp <- bike %>%
+  filter(year >= 2015 , year <= 2020)%>%
+  group_by(year,month)%>%
+  summarise(actual_rent = mean(bikes_hired))
+
+Expected <- bike%>%
+  filter(year >= 2015 , year <= 2020)%>%
+  group_by(month)%>%
+  summarise( expected_rent = mean (bikes_hired), .groups="keep")
+
+plot <- merge(temp,Expected,by="month")  
+plot <- plot %>%
+mutate(excess_rent = actual_rent - expected_rent, plus = ifelse(actual_rent>expected_rent, excess_rent,0), minus = ifelse(actual_rent < expected_rent, excess_rent, 0))
+
+ggplot(plot, aes(x=month, y = actual_rent, group= year))+
+  geom_line()+
+  geom_line(aes(x=month, y=expected_rent), color="blue", size = .8)+
+  facet_wrap(vars(year))+
+  theme_minimal()+
+  geom_ribbon(aes(ymin=expected_rent,ymax=minus+expected_rent),fill="#eab5b7",alpha=0.6)+
+  geom_ribbon(aes(ymin=expected_rent,ymax=plus+expected_rent),fill="#cbebce",alpha=0.6)+
+  labs(title = "Monthly changes in Tfl Bike Rental",subtitle = "Change from monthly average shown in blue and calculated from 2015-2019",x="",y="Bike Rentals", caption = "Source: TfL, London Data Store")+
+  theme(text = element_text(size=7.5))
+  
+
+
+```
+
+
+```{r tfl_percent_change, echo=FALSE, out.width="100%"}
+knitr::include_graphics(here::here("images", "tfl_weekly.png"), error = FALSE)
+```
+
+
+
+```{r}
+temp <- bike %>%
+  filter(year >= 2015 , year <= 2020)%>%
+  group_by(year,week)%>%
+  summarise(actual_rent = mean(bikes_hired))
+
+Expected <- bike%>%
+  filter(year >= 2015 , year <= 2020)%>%
+  group_by(week)%>%
+  summarise( expected_rent = mean (bikes_hired), .groups="keep")
+
+plot <- merge(temp,Expected,by="week")  
+plot <- plot %>%
+mutate(excess_rent = actual_rent - expected_rent, excess_rent_per = (excess_rent + expected_rent)/expected_rent-1,plus_per = ifelse(actual_rent>expected_rent, excess_rent_per,0), minus_per = ifelse(actual_rent < expected_rent, excess_rent_per, 0))
+
+ggplot(plot, aes(x=week, y=excess_rent_per, group = year))+
+  geom_line()+
+  facet_wrap(vars(year))+
+  geom_rect(aes(xmin=13, xmax=26, ymin=-0.6, ymax=0.6), fill='lightgray', alpha=0.04)+ 
+  geom_rect(aes(xmin=39, xmax=53, ymin=-0.6, ymax=0.6), fill='lightgray', alpha=0.04)+
+   geom_ribbon(aes(ymin=0,ymax=minus_per),fill="#eab5b7",alpha=0.6)+
+  geom_ribbon(aes(ymin=0,ymax=plus_per),fill="#cbebce",alpha=0.6)+
+  theme_minimal()+
+  labs(title = "Weekly changes in TfL bike rentals", subtitle = "% change from weekly averages calculated between 2015-2019",y="",caption = "Source: TfL, London Data Store")+
+  theme(text = element_text(size=10))+
+  geom_rug(aes(colour=ifelse(actual_rent>=expected_rent,">=0","<0")),sides="b")+
+  scale_colour_manual(values=c("#eab5b7","#cbebce"), guide=FALSE)+
+  scale_y_continuous(labels = scales::percent)+
+  scale_x_continuous(limits = c(0, 53), breaks = c(13,26,39,53))
+
+
+```
+>We should use mean when calculating expected rentals. The data is not skewed and it is normally distributed. The mean would be better here since it is the measure that includes all the values in the data set for its calculation. In this case each value is important.
+
+

@@ -1,0 +1,96 @@
+---
+categories:
+- ""
+- ""
+date: "2017-10-31T21:28:43-05:00"
+description: ""
+draft: false
+keywords: ""
+slug: project6
+title: Excess rentals in TfL bike sharing
+---
+
+
+
+<pre class="r"><code>url &lt;- &quot;https://data.london.gov.uk/download/number-bicycle-hires/ac29363e-e0cb-47cc-a97a-e216d900a6b0/tfl-daily-cycle-hires.xlsx&quot;
+
+# Download TFL data to temporary file
+httr::GET(url, write_disk(bike.temp &lt;- tempfile(fileext = &quot;.xlsx&quot;)))</code></pre>
+<pre><code>## Response [https://airdrive-secure.s3-eu-west-1.amazonaws.com/london/dataset/number-bicycle-hires/2020-09-18T09%3A06%3A54/tfl-daily-cycle-hires.xlsx?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Credential=AKIAJJDIMAIVZJDICKHA%2F20201019%2Feu-west-1%2Fs3%2Faws4_request&amp;X-Amz-Date=20201019T165502Z&amp;X-Amz-Expires=300&amp;X-Amz-Signature=a68f93f2cced8ba244431dcf336cc14856995b013878c1b2005d85aed5df98eb&amp;X-Amz-SignedHeaders=host]
+##   Date: 2020-10-19 16:55
+##   Status: 200
+##   Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+##   Size: 165 kB
+## &lt;ON DISK&gt;  C:\Users\ETSAO~1.MFA\AppData\Local\Temp\Rtmp8o49Uh\file36585feb6d57.xlsx</code></pre>
+<pre class="r"><code># Use read_excel to read it as dataframe
+bike0 &lt;- read_excel(bike.temp,
+                   sheet = &quot;Data&quot;,
+                   range = cell_cols(&quot;A:B&quot;))
+
+# change dates to get year, month, and week
+bike &lt;- bike0 %&gt;% 
+  clean_names() %&gt;% 
+  rename (bikes_hired = number_of_bicycle_hires) %&gt;% 
+  mutate (year = year(day),
+          month = lubridate::month(day, label = TRUE),
+          week = isoweek(day))</code></pre>
+<p><img src="C:/Users/etsao.mfa2021/my_website/images/tfl_distributions_monthly.png" width="100%" style="display: block; margin: auto;" /></p>
+<blockquote>
+<p>There is not a drastic change in bicycle usage in May and June 2020 compared to 2019. Compared to earlier years however, there is an increase in bicycle usage.</p>
+</blockquote>
+<p><img src="C:/Users/etsao.mfa2021/my_website/images/tfl_monthly.png" width="100%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>temp &lt;- bike %&gt;%
+  filter(year &gt;= 2015 , year &lt;= 2020)%&gt;%
+  group_by(year,month)%&gt;%
+  summarise(actual_rent = mean(bikes_hired))
+
+Expected &lt;- bike%&gt;%
+  filter(year &gt;= 2015 , year &lt;= 2020)%&gt;%
+  group_by(month)%&gt;%
+  summarise( expected_rent = mean (bikes_hired), .groups=&quot;keep&quot;)
+
+plot &lt;- merge(temp,Expected,by=&quot;month&quot;)  
+plot &lt;- plot %&gt;%
+mutate(excess_rent = actual_rent - expected_rent, plus = ifelse(actual_rent&gt;expected_rent, excess_rent,0), minus = ifelse(actual_rent &lt; expected_rent, excess_rent, 0))
+
+ggplot(plot, aes(x=month, y = actual_rent, group= year))+
+  geom_line()+
+  geom_line(aes(x=month, y=expected_rent), color=&quot;blue&quot;, size = .8)+
+  facet_wrap(vars(year))+
+  theme_minimal()+
+  geom_ribbon(aes(ymin=expected_rent,ymax=minus+expected_rent),fill=&quot;#eab5b7&quot;,alpha=0.6)+
+  geom_ribbon(aes(ymin=expected_rent,ymax=plus+expected_rent),fill=&quot;#cbebce&quot;,alpha=0.6)+
+  labs(title = &quot;Monthly changes in Tfl Bike Rental&quot;,subtitle = &quot;Change from monthly average shown in blue and calculated from 2015-2019&quot;,x=&quot;&quot;,y=&quot;Bike Rentals&quot;, caption = &quot;Source: TfL, London Data Store&quot;)+
+  theme(text = element_text(size=7.5))</code></pre>
+<p><img src="/blogs/project6_files/figure-html/unnamed-chunk-1-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="C:/Users/etsao.mfa2021/my_website/images/tfl_weekly.png" width="100%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>temp &lt;- bike %&gt;%
+  filter(year &gt;= 2015 , year &lt;= 2020)%&gt;%
+  group_by(year,week)%&gt;%
+  summarise(actual_rent = mean(bikes_hired))
+
+Expected &lt;- bike%&gt;%
+  filter(year &gt;= 2015 , year &lt;= 2020)%&gt;%
+  group_by(week)%&gt;%
+  summarise( expected_rent = mean (bikes_hired), .groups=&quot;keep&quot;)
+
+plot &lt;- merge(temp,Expected,by=&quot;week&quot;)  
+plot &lt;- plot %&gt;%
+mutate(excess_rent = actual_rent - expected_rent, excess_rent_per = (excess_rent + expected_rent)/expected_rent-1,plus_per = ifelse(actual_rent&gt;expected_rent, excess_rent_per,0), minus_per = ifelse(actual_rent &lt; expected_rent, excess_rent_per, 0))
+
+ggplot(plot, aes(x=week, y=excess_rent_per, group = year))+
+  geom_line()+
+  facet_wrap(vars(year))+
+  geom_rect(aes(xmin=13, xmax=26, ymin=-0.6, ymax=0.6), fill=&#39;lightgray&#39;, alpha=0.04)+ 
+  geom_rect(aes(xmin=39, xmax=53, ymin=-0.6, ymax=0.6), fill=&#39;lightgray&#39;, alpha=0.04)+
+   geom_ribbon(aes(ymin=0,ymax=minus_per),fill=&quot;#eab5b7&quot;,alpha=0.6)+
+  geom_ribbon(aes(ymin=0,ymax=plus_per),fill=&quot;#cbebce&quot;,alpha=0.6)+
+  theme_minimal()+
+  labs(title = &quot;Weekly changes in TfL bike rentals&quot;, subtitle = &quot;% change from weekly averages calculated between 2015-2019&quot;,y=&quot;&quot;,caption = &quot;Source: TfL, London Data Store&quot;)+
+  theme(text = element_text(size=10))+
+  geom_rug(aes(colour=ifelse(actual_rent&gt;=expected_rent,&quot;&gt;=0&quot;,&quot;&lt;0&quot;)),sides=&quot;b&quot;)+
+  scale_colour_manual(values=c(&quot;#eab5b7&quot;,&quot;#cbebce&quot;), guide=FALSE)+
+  scale_y_continuous(labels = scales::percent)+
+  scale_x_continuous(limits = c(0, 53), breaks = c(13,26,39,53))</code></pre>
+<p><img src="/blogs/project6_files/figure-html/unnamed-chunk-2-1.png" width="648" style="display: block; margin: auto;" />
+&gt;We should use mean when calculating expected rentals. The data is not skewed and it is normally distributed. The mean would be better here since it is the measure that includes all the values in the data set for its calculation. In this case each value is important.</p>

@@ -1,3 +1,15 @@
+---
+categories:
+- ""
+- ""
+date: "2017-10-31T21:28:43-05:00"
+description: ""
+draft: false
+keywords: ""
+slug: project1
+title: Youth Risk Behavior Surveillance
+---
+
 
 
 <div id="youth-risk-behavior-surveillance" class="section level1">
@@ -276,7 +288,7 @@ summary</code></pre>
   geom_text(aes(x=mean.weight+8, label=paste0(&quot;Mean\n&quot;, round(mean.weight,2)), y=0.01))+
   geom_text(aes(x=median.weight-8, label=paste0(&quot;Median\n&quot;, round(median.weight,2)), y=0.02))+
   labs(title = &quot;Distribution of weights&quot;, x=&quot;Weight&quot;, y=&quot;&quot;)</code></pre>
-<p><img src="Youth-Risk-Behavior-Surveillance_files/figure-html/eda_on_weight-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="/blogs/project1_files/figure-html/eda_on_weight-1.png" width="768" style="display: block; margin: auto;" /></p>
 <blockquote>
 <p>We are missing 1004 values for weight. Based on our graph, median weight of the participants is at 64.41kg, while mean weight is at 67.91kg.</p>
 </blockquote>
@@ -291,7 +303,7 @@ ggplot(temp, aes(x=weight, y=physically_active_7d))+
   geom_boxplot()+
   theme_bw()+
   labs(title=&quot;Weight vs Physical activity&quot;, x=&quot;Weight&quot;, y=&quot;Number of days with physical act. in the last 7&quot;)</code></pre>
-<p><img src="Youth-Risk-Behavior-Surveillance_files/figure-html/unnamed-chunk-2-1.png" width="768" style="display: block; margin: auto;" />
+<p><img src="/blogs/project1_files/figure-html/unnamed-chunk-2-1.png" width="768" style="display: block; margin: auto;" />
 &gt;It seems that there is a positive correlation between weight and physical activity. High schooler’s that had below 2 days of physical activity seem to have the lowest weight on average, while those that had 5 and above usually had higher weights.</p>
 <pre class="r"><code>yrbss &lt;- yrbss %&gt;% 
   mutate(physical_3plus = ifelse(physically_active_7d &gt;= 3, &quot;yes&quot;, &quot;no&quot;))
@@ -332,7 +344,7 @@ ggplot(temp, aes(x=weight, y=physical_3plus))+
   geom_boxplot()+
   theme_bw()+
   labs(title=&quot;Weight vs Physical activity&quot;, x=&quot;Weight&quot;, y=&quot;3 or more days with physical act. in the last 7?&quot;)</code></pre>
-<p><img src="Youth-Risk-Behavior-Surveillance_files/figure-html/boxplot-1.png" width="768" style="display: block; margin: auto;" />
+<p><img src="/blogs/project1_files/figure-html/boxplot-1.png" width="768" style="display: block; margin: auto;" />
 &gt;This boxplot confirms our previous considerations about the correlation between weight and physical activity. We notice that 25th percentile, median and 75th percentile are higher for the group that answered “Yes” to the question asked.
 It is clear that high schoolers that had 3 or more days of physical activity in the last week have higher weight on average than those who did not.</p>
 </div>
@@ -387,10 +399,10 @@ It is clear that high schoolers that had 3 or more days of physical activity in 
   calculate(stat = &quot;diff in means&quot;, order = c(&quot;yes&quot;, &quot;no&quot;))</code></pre>
 <pre class="r"><code>ggplot(data = null_dist, aes(x = stat)) +
   geom_histogram()</code></pre>
-<p><img src="Youth-Risk-Behavior-Surveillance_files/figure-html/unnamed-chunk-9-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="/blogs/project1_files/figure-html/unnamed-chunk-9-1.png" width="768" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>null_dist %&gt;% visualize() +
   shade_p_value(obs_stat = obs_diff, direction = &quot;two-sided&quot;)</code></pre>
-<p><img src="Youth-Risk-Behavior-Surveillance_files/figure-html/unnamed-chunk-10-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="/blogs/project1_files/figure-html/unnamed-chunk-10-1.png" width="768" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>null_dist %&gt;%
   get_p_value(obs_stat = obs_diff, direction = &quot;two_sided&quot;)</code></pre>
 <pre><code>## # A tibble: 1 x 1

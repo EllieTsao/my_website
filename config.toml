@@ -95,17 +95,17 @@ disqusShortname = ""
       title = "Youth Risk Behavior Surveillance"
       #subtitle = "Ipsum Dolor Sit Amet"
       #image = "pic01.jpg"
-      url = "blogs/blog5"
+      url = "blogs/project1"
 
     [[params.tiles.showcase]]
-      title = "Omega Group plc- Pay Discrimination"
-      subtitle = "Gender Inequality?"
+      title = "Trump's Approval Margins"
+      #subtitle = "Gender Inequality?"
       image = "pic02.jpg"
-      url = "blogs/blog6"
+      url = "blogs/magna"
 
     [[params.tiles.showcase]]
-      title = "Magna"
-      subtitle = "Lorem Etiam Nullam"
+      title = "Yield Curve inversion"
+      #subtitle = "Lorem Etiam Nullam"
       image = "pic03.jpg"
       url = "blogs/magna"
 
@@ -174,8 +174,8 @@ disqusShortname = ""
     title = "Email"
     email = "etsao.mfa2021@london.edu"
     [[params.contact.phone]]
-    #title = "Phone"
-    #phone = "(000) 000-0000 x1234"
+    title = "Phone"
+    phone = "(+44) 7425-482864"
 
     [[params.contact.address]]
     title = "Address"

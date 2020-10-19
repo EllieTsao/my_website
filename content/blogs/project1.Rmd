@@ -45,8 +45,6 @@ library(tidyquant)
 ```
 
 
-# Youth Risk Behavior Surveillance
-
 ## Load the data
 
 ```{r}
@@ -102,7 +100,7 @@ ggplot(temp, aes(x=weight, y=physically_active_7d))+
 
 
 ```
->It seems that there is a positive correlation between weight and physical activity. High schooler's that had below 2 days of physical activity seem to have the lowest weight on average, while those that had 5 and above usually had higher weights. 
+It seems that there is a positive correlation between weight and physical activity. High schooler's that had below 2 days of physical activity seem to have the lowest weight on average, while those that had 5 and above usually had higher weights. 
 
   
 ```{r}
@@ -141,7 +139,7 @@ ggplot(temp, aes(x=weight, y=physical_3plus))+
   theme_bw()+
   labs(title="Weight vs Physical activity", x="Weight", y="3 or more days with physical act. in the last 7?")
 ```
->This boxplot confirms our previous considerations about the correlation between weight and physical activity. We notice that 25th percentile, median and 75th percentile are higher for the group that answered "Yes" to the question asked.
+This boxplot confirms our previous considerations about the correlation between weight and physical activity. We notice that 25th percentile, median and 75th percentile are higher for the group that answered "Yes" to the question asked.
 It is clear that high schoolers that had 3 or more days of physical activity in the last week have higher weight on average than those who did not. 
 
 ## Confidence Interval

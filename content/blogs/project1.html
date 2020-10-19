@@ -12,8 +12,6 @@ title: Youth Risk Behavior Surveillance
 
 
 
-<div id="youth-risk-behavior-surveillance" class="section level1">
-<h1>Youth Risk Behavior Surveillance</h1>
 <div id="load-the-data" class="section level2">
 <h2>Load the data</h2>
 <pre class="r"><code>data(yrbss)
@@ -304,7 +302,7 @@ ggplot(temp, aes(x=weight, y=physically_active_7d))+
   theme_bw()+
   labs(title=&quot;Weight vs Physical activity&quot;, x=&quot;Weight&quot;, y=&quot;Number of days with physical act. in the last 7&quot;)</code></pre>
 <p><img src="/blogs/project1_files/figure-html/unnamed-chunk-2-1.png" width="768" style="display: block; margin: auto;" />
-&gt;It seems that there is a positive correlation between weight and physical activity. High schooler’s that had below 2 days of physical activity seem to have the lowest weight on average, while those that had 5 and above usually had higher weights.</p>
+It seems that there is a positive correlation between weight and physical activity. High schooler’s that had below 2 days of physical activity seem to have the lowest weight on average, while those that had 5 and above usually had higher weights.</p>
 <pre class="r"><code>yrbss &lt;- yrbss %&gt;% 
   mutate(physical_3plus = ifelse(physically_active_7d &gt;= 3, &quot;yes&quot;, &quot;no&quot;))
 
@@ -345,7 +343,7 @@ ggplot(temp, aes(x=weight, y=physical_3plus))+
   theme_bw()+
   labs(title=&quot;Weight vs Physical activity&quot;, x=&quot;Weight&quot;, y=&quot;3 or more days with physical act. in the last 7?&quot;)</code></pre>
 <p><img src="/blogs/project1_files/figure-html/boxplot-1.png" width="768" style="display: block; margin: auto;" />
-&gt;This boxplot confirms our previous considerations about the correlation between weight and physical activity. We notice that 25th percentile, median and 75th percentile are higher for the group that answered “Yes” to the question asked.
+This boxplot confirms our previous considerations about the correlation between weight and physical activity. We notice that 25th percentile, median and 75th percentile are higher for the group that answered “Yes” to the question asked.
 It is clear that high schoolers that had 3 or more days of physical activity in the last week have higher weight on average than those who did not.</p>
 </div>
 <div id="confidence-interval" class="section level2">
@@ -409,5 +407,4 @@ It is clear that high schoolers that had 3 or more days of physical activity in 
 ##   p_value
 ##     &lt;dbl&gt;
 ## 1       0</code></pre>
-</div>
 </div>

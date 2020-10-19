@@ -98,16 +98,16 @@ disqusShortname = ""
       url = "blogs/project1"
 
     [[params.tiles.showcase]]
-      title = "Trump's Approval Margins"
-      #subtitle = "Gender Inequality?"
+      title = "Omega Group plc- Pay Discrimination"
+      subtitle = "Gender Inequality?"
       image = "pic02.jpg"
-      url = "blogs/magna"
-
+      url = "blogs/project2"
+      
     [[params.tiles.showcase]]
-      title = "Yield Curve inversion"
+      title = "IMDB ratings: Differences between directors"
       #subtitle = "Lorem Etiam Nullam"
       image = "pic03.jpg"
-      url = "blogs/magna"
+      url = "blogs/project4"
 
     [[params.tiles.showcase]]
       title = "Ipsum"
